@@ -6,10 +6,18 @@ st.set_page_config(page_title="Quiz Bandeiras", layout="centered")
 
 # Lista de Países (Nome, Código)
 paises_dados = [
-    ("Brasil", "br"), ("Argentina", "ar"), ("França", "fr"), 
-    ("Japão", "jp"), ("Itália", "it"), ("Alemanha", "de"),
-    ("Espanha", "es"), ("México", "mx"), ("Portugal", "pt"),
-    ("Canadá", "ca"), ("Estados Unidos", "us"), ("Austrália", "au")
+    ("Brasil", "br"), ("Argentina", "ar"), ("Uruguai", "uy"), ("Paraguai", "py"),
+            ("Chile", "cl"), ("Bolivia", "bo"), ("Peru", "pe"), ("Colombia", "co"),
+            ("Equador", "ec"), ("Venezuela", "ve"), ("Estados Unidos", "us"), ("Canada", "ca"),
+            ("Mexico", "mx"), ("Cuba", "cu"), ("Portugal", "pt"), ("Espanha", "es"),
+            ("França", "fr"), ("Italia", "it"), ("Alemanha", "de"), ("Reino Unido", "gb"),
+            ("Irlanda", "ie"), ("Belgica", "be"), ("Holanda", "nl"), ("Suíça", "ch"),
+            ("Austria", "at"), ("Grecia", "gr"), ("Russia", "ru"), ("Ucrânia", "ua"),
+            ("Polonia", "pl"), ("Noruega", "no"), ("Suecia", "se"), ("Finlândia", "fi"),
+            ("Dinamarca", "dk"), ("Japao", "jp"), ("China", "cn"), ("Coreia do Sul", "kr"),
+            ("India", "in"), ("Israel", "il"), ("Egito", "eg"), ("Africa do Sul", "za"),
+            ("Angola", "ao"), ("Nigeria", "ng"), ("Australia", "au"), ("Nova Zelandia", "nz"),
+            ("Tailandia", "th"), ("Turquia", "tr"), ("Ira", "ir"), ("Arábia Saudita", "sa")
 ]
 
 # Inicializa o estado do jogo
