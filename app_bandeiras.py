@@ -33,7 +33,7 @@ if 'paises' not in st.session_state:
     st.session_state.pontos = 0
 
 # --- Jogo ---
-st.title("🌍 Desafio das Bandeiras")
+st.title("🌍 Desafio das Bandeiras do MANUCA BARROS")
 
 if st.session_state.indice < len(st.session_state.paises):
     nome_correto, codigo = st.session_state.paises[st.session_state.indice]
