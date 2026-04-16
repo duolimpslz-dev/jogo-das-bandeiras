@@ -6,7 +6,7 @@ import io
 from PIL import Image
 
 # --- Configuração Visual ---
-st.set_page_config(page_title="Desafio das Bandeiras", page_icon="🌍")
+st.set_page_config(page_title="Desafio das Bandeiras do MANUCA", page_icon="🌍")
 
 # Estilo para deixar o site bonito no celular
 st.markdown("""
