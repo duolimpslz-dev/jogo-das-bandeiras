@@ -20,7 +20,7 @@ if 'indice' not in st.session_state:
     random.shuffle(paises_dados)
     st.session_state.lista = paises_dados
 
-st.title("🏁 Quiz das Bandeiras")
+st.title("🏁 Quiz das Bandeiras do MANUCA BARROS")
 
 # Verifica se o jogo ainda não acabou
 if st.session_state.indice < len(st.session_state.lista):
