@@ -1,99 +1,63 @@
 import streamlit as st
 import random
-from urllib.request import urlopen
 
-# --- Configuração da Página ---
-st.set_page_config(page_title="Quiz de Bandeiras", page_icon="🏁")
+# --- Configuração ---
+st.set_page_config(page_title="Quiz Bandeiras", layout="centered")
 
-# Estilo para botões grandes e coloridos
-st.markdown("""
-    <style>
-    div.stButton > button {
-        width: 100%;
-        height: 3.5em;
-        font-size: 18px !important;
-        font-weight: bold;
-        border-radius: 15px;
-        margin-bottom: 10px;
-    }
-    </style>
-    """, unsafe_allow_html=True)
+# Lista de Países (Nome, Código)
+paises_dados = [
+    ("Brasil", "br"), ("Argentina", "ar"), ("França", "fr"), 
+    ("Japão", "jp"), ("Itália", "it"), ("Alemanha", "de"),
+    ("Espanha", "es"), ("México", "mx"), ("Portugal", "pt"),
+    ("Canadá", "ca"), ("Estados Unidos", "us"), ("Austrália", "au")
+]
 
-# --- Banco de Dados Completo ---
-@st.cache_data
-def carregar_dados():
-    return [
-        ("Brasil", "br"), ("Argentina", "ar"), ("Uruguai", "uy"), ("Portugal", "pt"),
-        ("França", "fr"), ("Japão", "jp"), ("Itália", "it"), ("Alemanha", "de"),
-        ("Espanha", "es"), ("Canadá", "ca"), ("Estados Unidos", "us"), ("México", "mx"),
-        ("Austrália", "au"), ("China", "cn"), ("Coreia do Sul", "kr"), ("Reino Unido", "gb"),
-        ("Grécia", "gr"), ("Rússia", "ru"), ("Egito", "eg"), ("África do Sul", "za")
-    ]
-
-paises_lista = carregar_dados()
-
-# --- Inicialização da Memória (Session State) ---
+# Inicializa o estado do jogo
 if 'indice' not in st.session_state:
     st.session_state.indice = 0
     st.session_state.pontos = 0
-    st.session_state.game_over = False
-    random.shuffle(paises_lista)
-    st.session_state.paises_jogo = paises_lista
+    random.shuffle(paises_dados)
+    st.session_state.lista = paises_dados
 
-# --- Lógica para Gerar as Opções ---
-def gerar_opcoes(correto, lista_total):
-    errados = [p[0] for p in lista_total if p[0] != correto]
-    opcoes = random.sample(errados, 3) # Pega 3 nomes errados aleatórios
-    opcoes.append(correto) # Adiciona o certo
-    random.shuffle(opcoes) # Embaralha as posições
-    return opcoes
-
-# --- Interface do Jogo ---
 st.title("🏁 Quiz das Bandeiras")
 
-if not st.session_state.game_over:
-    if st.session_state.indice < len(st.session_state.paises_jogo):
-        pais_atual, codigo_atual = st.session_state.paises_jogo[st.session_state.indice]
-        
-        st.write(f"### Pontuação: {st.session_state.pontos}")
-        
-        # Exibe a Bandeira
-        url = f"https://flagcdn.com/w640/{codigo_atual}.png"
-        st.image(url, use_container_width=True)
+if st.session_state.indice < len(st.session_state.lista):
+    correto, cod = st.session_state.lista[st.session_state.indice]
+    
+    # Placar e Progresso
+    st.write(f"**Pontuação: {st.session_state.pontos}** | Bandeira {st.session_state.indice + 1} de {len(st.session_state.lista)}")
+    
+    # Exibe imagem
+    st.image(f"https://flagcdn.com/w640/{cod}.png", use_container_width=True)
+    
+    # Gera opções de resposta
+    if f'opc_{st.session_state.indice}' not in st.session_state:
+        outros = [p[0] for p in paises_dados if p[0] != correto]
+        opcoes = random.sample(outros, 3)
+        opcoes.append(correto)
+        random.shuffle(opcoes)
+        st.session_state[f'opc_{st.session_state.indice}'] = opcoes
 
-        st.write("### Qual é este país?")
+    st.write("### Qual é este país?")
 
-        # Se não tivermos as opções da rodada atual guardadas, geramos agora
-        if f'opcoes_{st.session_state.indice}' not in st.session_state:
-            st.session_state[f'opcoes_{st.session_state.indice}'] = gerar_opcoes(pais_atual, paises_lista)
-
-        opcoes = st.session_state[f'opcoes_{st.session_state.indice}']
-
-        # Criar botões para as opções
-        # Usamos colunas para os botões ficarem organizados
-        col1, col2 = st.columns(2)
-        
-        for i, opcao in enumerate(opcoes):
-            target_col = col1 if i % 2 == 0 else col2
-            if target_col.button(opcao):
-                if opcao == pais_atual:
-                    st.toast(f"Correto! {pais_atual} ✅", icon="🎉")
-                    st.session_state.pontos += 1
-                else:
-                    st.toast(f"Errado! Era {pais_atual} ❌", icon="💥")
-                
-                st.session_state.indice += 1
-                st.rerun()
-
-    else:
-        st.session_state.game_over = True
-        st.rerun()
+    # Criando botões
+    for opt in st.session_state[f'opc_{st.session_state.indice}']:
+        if st.button(opt, key=f"{opt}_{st.session_state.indice}", use_container_width=True):
+            if opt == correto:
+                st.session_state.pontos += 1
+                st.toast(f"Correto! Era {correto} ✅", icon="🎉") # Notificação persistente
+            else:
+                st.toast(f"Errou! Era {correto} ❌", icon="💥") # Notificação persistente
+            
+            st.session_state.indice += 1
+            st.rerun()
+            
 else:
     st.balloons()
-    st.success("## 🏆 Fim de Jogo!")
-    st.write(f"Você acertou **{st.session_state.pontos}** de **{len(st.session_state.paises_jogo)}** bandeiras!")
-    
-    if st.button("🔄 Jogar Novamente"):
+    st.write("### 🏆 Fim de jogo!")
+    st.write(f"Você fez **{st.session_state.pontos}** pontos de um total de {len(st.session_state.lista)}.")
+    if st.button("Reiniciar Jogo"):
+        # Limpa tudo para recomeçar
         for key in list(st.session_state.keys()):
             del st.session_state[key]
         st.rerun()
